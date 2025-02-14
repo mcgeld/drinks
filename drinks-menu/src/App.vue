@@ -25,17 +25,11 @@ export default {
   methods: {
     fetchDrinks() {
       fetch(`${apiUrl}/drinks`)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-          }
-          response.json();
-        })
+        .then(response => response.json())
         .then(data => {
           this.drinks = data;
           this.loading = false;
-        })
-        .catch(error => console.error("Error fetching drinks:", error));
+        });
     },
     orderDrink(drinkId) {
       fetch(`${apiUrl}/order`, {
