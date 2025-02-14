@@ -3,6 +3,5 @@ dist/
 dev-dist/
 drinks.db
 .env
-.env.production
 venv/
 *.sh
