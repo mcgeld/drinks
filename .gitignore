@@ -5,3 +5,4 @@ drinks.db
 .env
 .env.production
 venv/
+*.sh
