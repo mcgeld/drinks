@@ -28,7 +28,7 @@ class Drink(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String(255), nullable=False)
     description = Column(String, nullable=True)
-    image_url = Column(String(255), nullable=True)
+    image_url = Column(String(300), nullable=True)
     is_custom = Column(Boolean, default=False)
 
 class Ingredient(Base):
