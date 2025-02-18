@@ -1,11 +1,18 @@
-from fastapi import FastAPI, Depends
-from sqlalchemy.orm import Session
-from database import get_db
-from models import Drink
+from fastapi import FastAPI
+from api.drinks import router as drinks_router
+from api.users import router as users_router
+from api.coasters import router as coasters_router
+from api.orders import router as orders_router
 
 app = FastAPI()
 
-@app.get("/api/drinks")
-def get_drinks(db: Session = Depends(get_db)):
-    drinks = db.query(Drink).all()
-    return drinks
+# Include routers
+app.include_router(drinks_router, prefix="/api", tags=["Drinks"])
+app.include_router(users_router, prefix="/api", tags=["Users"])
+app.include_router(coasters_router, prefix="/api", tags=["Coasters"])
+app.include_router(orders_router, prefix="/api", tags=["Orders"])
+
+@app.get("/")
+def root():
+    return {"message": "Welcome to the Drinks API!"}
+
