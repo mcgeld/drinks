@@ -19,25 +19,47 @@ export default {
   data() {
     return {
       drinks: [],
-      loading: true
+      loading: true,
+      ordering: false, // New state for tracking order status
+      message: "" // To show order confirmation
     };
   },
   methods: {
-    fetchDrinks() {
-      fetch(`${apiUrl}/drinks`)
-        .then(response => response.json())
-        .then(data => {
-          this.drinks = data;
-          this.loading = false;
-        });
+    async fetchDrinks() {
+      try {
+        const response = await fetch(`${apiUrl}/drinks`);
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        this.drinks = await response.json();
+        this.loading = false;
+      } catch (error) {
+        console.error("Error fetching drinks:", error);
+      }
     },
+
     orderDrink(drinkId) {
-      fetch(`${apiUrl}/order`, {
+      /*let userId = localStorage.getItem("userId");
+      let coasterId = localStorage.getItem("coasterId");*/
+
+      let userId = 1;
+      let coasterId = 1;
+
+      fetch("/api/orders", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ drink_id: drinkId })
-      }).then(() => alert("Order placed!"));
+        body: JSON.stringify({ drink_id: drinkId, user_id: userId, coaster_id: coasterId }),
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log("Order response:", data); //Debugging output
+        if (!userId) {
+          // First time ordering, save the guest user ID
+          localStorage.setItem("userId", data.user_id);
+        }
+        alert("Order placed!");
+      })
+      .catch(error => console.error("Error placing order:", error));
     }
+
   },
   mounted() {
     this.fetchDrinks();
