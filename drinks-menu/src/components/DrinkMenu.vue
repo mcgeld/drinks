@@ -30,6 +30,11 @@ export default {
     };
   },
   methods: {
+    goToDrink(drinkId) {
+      this.$router.push({ name: "DrinkDetail", params: { id: drinkId } }).then(() => {
+        this.$forceUpdate();
+      });
+    },
     async fetchDrinks() {
       try {
         const response = await fetch(`${apiUrl}/drinks`);
@@ -41,9 +46,6 @@ export default {
         this.loading = false;
       }
     },
-    goToDrink(drinkId) {
-      this.$router.push(`/drink/${drinkId}`);
-    }
   },
   mounted() {
     this.fetchDrinks();

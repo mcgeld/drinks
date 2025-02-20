@@ -15,6 +15,13 @@ def get_drinks(db: Session = Depends(get_db)):
     drinks = db.query(Drink).all()
     return drinks
 
+@router.get("/drinks/{drink_id}")
+def get_drink(drink_id: int, db: Session = Depends(get_db)):
+    drink = db.query(Drink).filter(Drink.id == drink_id).first()
+    if not drink:
+        raise HTTPException(status_code=404, detail="Drink not found")
+    return drink
+
 # Schema for incoming drink data
 class DrinkCreate(BaseModel):
     name: str

@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from api.drinks import router as drinks_router
 from api.users import router as users_router
 from api.coasters import router as coasters_router
@@ -16,3 +17,16 @@ app.include_router(orders_router, prefix="/api", tags=["Orders"])
 def root():
     return {"message": "Welcome to the Drinks API!"}
 
+# Allow frontend domain to access the API
+origins = [
+    "https://dev.drinks.mcgeld.com",
+    "http://dev.drinks.mcgeld.com" # In case you use HTTP sometimes
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
