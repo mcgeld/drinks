@@ -4,7 +4,7 @@ import DrinkDetail from '../components/DrinkDetail.vue';
 
 const routes = [
   { path: '/', name: 'Home', component: HomePage },
-  { path: '/drink/:id', name: 'DrinkDetail', component: DrinkDetail },
+  { path: '/drink/:id', name: 'DrinkDetail', component: DrinkDetail, props: true },
 ];
 
 const router = createRouter({

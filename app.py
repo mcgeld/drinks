@@ -4,6 +4,7 @@ from api.drinks import router as drinks_router
 from api.users import router as users_router
 from api.coasters import router as coasters_router
 from api.orders import router as orders_router
+from api.sessions import router as sessions_router
 
 app = FastAPI()
 
@@ -12,6 +13,7 @@ app.include_router(drinks_router, prefix="/api", tags=["Drinks"])
 app.include_router(users_router, prefix="/api", tags=["Users"])
 app.include_router(coasters_router, prefix="/api", tags=["Coasters"])
 app.include_router(orders_router, prefix="/api", tags=["Orders"])
+app.include_router(sessions_router, prefix="/api", tags=["Sessions"])
 
 @app.get("/")
 def root():

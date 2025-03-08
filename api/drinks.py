@@ -7,9 +7,6 @@ from fastapi import HTTPException
 
 router = APIRouter()
 
-##########
-# DRINKS #
-##########
 @router.get("/drinks")
 def get_drinks(db: Session = Depends(get_db)):
     drinks = db.query(Drink).all()

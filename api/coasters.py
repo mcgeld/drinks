@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from database import get_db
 from models import Coaster
@@ -14,3 +14,9 @@ def create_coaster(coaster: CoasterCreate, db: Session = Depends(get_db)):
     db.refresh(new_coaster)
     return new_coaster
 
+@router.get("/coasters/{coaster_id}")
+def get_coaster(coaster_id: int, db: Session = Depends(get_db)):
+    coaster = db.query(Coaster).filter(Coaster.id == coaster_id).first()
+    if not coaster:
+        raise HTTPException(status_code=404, detail="Coaster not found")
+    return coaster, 200

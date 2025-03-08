@@ -5,33 +5,54 @@
     <p>{{ drink.description }}</p>
     <p>Price: {{ drink.price ? `$${drink.price.toFixed(2)}` : "N/A" }}</p>
 
-    <button @click="goToCoasterEntry" class="order-button">Order This Drink</button>
+    <button @click="showCoasterEntry = true" class="order-button">Order This Drink</button>
+    <!-- Coaster Entry Modal -->
+    <CoasterEntry
+        :show="showCoasterEntry"
+        @confirm="handleCoaster"
+        @close="showCoasterEntry = false"
+     />
   </div>
   <div v-else class="loading">Loading...</div>
 </template>
 
 <script>
-import { useRoute, useRouter } from "vue-router";
+import CoasterEntry from "@/components/CoasterEntry.vue";
 const apiUrl = process.env.VUE_APP_API_URL;
 
 export default {
+  components: { CoasterEntry },
   data() {
     return {
-      drink: null,
+      drink: {},
       loading: true,
+      showCoasterEntry: false,
     };
   },
-  setup() {
-    const route = useRoute();
-    const router = useRouter();
-
-    function goToCoasterEntry() {
-      router.push({ name: "CoasterEntry", params: { drinkId: route.params.id } });
-    }
-
-    return { goToCoasterEntry };
-  },
   methods: {
+    handleCoaster(coasterId) {
+      this.showCoasterEntry = false;
+      this.submitOrder(coasterId);
+    },
+    submitOrder(coasterId) {
+      const userId = localStorage.getItem("userId");
+      const parsedUserId = userId && userId !== "undefined" ? parseInt(userId, 10) : null;
+      fetch(`${process.env.VUE_APP_API_URL}/orders`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({
+          user_id: parsedUserId,
+          coaster_id: coasterId,
+          drink_id: this.drink.id,
+        }),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Order successful!", data);
+          alert("Your order has been placed!");
+        })
+        .catch((error) => console.error("Order failed:", error));
+    },
     async fetchDrink() {
       try {
         const response = await fetch(`${apiUrl}/drinks/${this.$route.params.id}`);
