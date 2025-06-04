@@ -19,4 +19,7 @@ def get_coaster(coaster_id: int, db: Session = Depends(get_db)):
     coaster = db.query(Coaster).filter(Coaster.id == coaster_id).first()
     if not coaster:
         raise HTTPException(status_code=404, detail="Coaster not found")
-    return coaster, 200
+    # FastAPI automatically handles status codes for successful responses.
+    # Returning a tuple here results in an unexpected response body. Instead,
+    # return just the coaster instance so FastAPI can serialize it correctly.
+    return coaster
